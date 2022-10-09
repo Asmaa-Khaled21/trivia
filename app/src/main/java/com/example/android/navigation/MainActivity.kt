@@ -20,6 +20,8 @@ import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -38,6 +40,14 @@ class MainActivity : AppCompatActivity() {
         val navController = this.findNavController(R.id.myNavHostFragment)
         // TODO (07) Add the DrawerLayout as the second parameter to setupActionBarWithNavController
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+        // prevent nav gesture if not on start destination
+        navController.addOnDestinationChangedListener { nc: NavController, nd: NavDestination, args: Bundle? ->
+            if (nd.id == nc.graph.startDestination) {
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            } else {
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            }
+        }
         // TODO (08) Create appBarConfiguration with the navController.graph and drawerLayout
         appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
         // TODO (09) Hook the navigation UI up to the navigation view. (navView)
